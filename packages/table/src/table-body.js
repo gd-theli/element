@@ -1,11 +1,11 @@
-import { arrayFindIndex } from 'element-ui/src/utils/util';
-import { getCell, getColumnByCell, getRowIdentity } from './util';
-import { getStyle, hasClass, removeClass, addClass } from 'element-ui/src/utils/dom';
 import ElCheckbox from 'element-ui/packages/checkbox';
 import ElTooltip from 'element-ui/packages/tooltip';
+import { addClass, getStyle, hasClass, removeClass } from 'element-ui/src/utils/dom';
+import { arrayFindIndex } from 'element-ui/src/utils/util';
 import debounce from 'throttle-debounce/debounce';
 import LayoutObserver from './layout-observer';
 import { mapStates } from './store/helper';
+import { getCell, getColumnByCell, getRowIdentity } from './util';
 
 export default {
   name: 'ElTableBody',
@@ -251,9 +251,10 @@ export default {
       range.setStart(cellChild, 0);
       range.setEnd(cellChild, cellChild.childNodes.length);
       const rangeWidth = range.getBoundingClientRect().width;
+      const rangeHeight = range.getBoundingClientRect().height;
       const padding = (parseInt(getStyle(cellChild, 'paddingLeft'), 10) || 0) +
         (parseInt(getStyle(cellChild, 'paddingRight'), 10) || 0);
-      if ((rangeWidth + padding > cellChild.offsetWidth || cellChild.scrollWidth > cellChild.offsetWidth) && this.$refs.tooltip) {
+      if ((rangeWidth + padding > cellChild.offsetWidth || cellChild.scrollWidth > cellChild.offsetWidth) || (rangeHeight + padding > cellChild.offsetHeight || cellChild.scrollHeight > cellChild.offsetHeight) && this.$refs.tooltip) {
         const tooltip = this.$refs.tooltip;
         // TODO 会引起整个 Table 的重新渲染，需要优化
         this.tooltipContent = cell.innerText || cell.textContent;
